@@ -8,21 +8,22 @@ template <unsigned int size>
 class NetworkHandler
 {
 private:
-    Network network;
+    Network<size> network;
 
 public:
     std::vector<const Node*& const> getAdjacentNodes(const std::vector<int>& nodes);
 };
 
-std::vector<const Node*& const> getAdjacentNodes(const std::vector<int>& nodes)
+template <unsigned int size>
+std::vector<const Node*& const> NetworkHandler<size>::getAdjacentNodes(const std::vector<int>& nodes)
 {
-    std::vector<const Node*& const>&& returningNodes;
+    std::vector<const Node*& const> returningNodes;
     for (const int& node : nodes)
     {
         Node* currentNode = network[node];
         while (currentNode != nullptr)
         {
-            returningNodes.append(currentNode);
+            returningNodes.emplace_back(currentNode);
             currentNode = currentNode->m_pNextNode;
         }
     }

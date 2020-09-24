@@ -12,6 +12,7 @@ private:
     unsigned int minute;
 
 public:
+    DiffusionTime() = delete;
     DiffusionTime(const unsigned int& year, const unsigned int& month, 
                   const unsigned int& day, const unsigned int& hour, const unsigned int& minute);
 

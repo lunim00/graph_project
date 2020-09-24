@@ -1,7 +1,7 @@
 #ifndef NETWORK_HPP
 #define NETWORK_HPP
 #include <array>
-#include "timeInterval.hpp"
+#include "diffusionTime.hpp"
 #include "node.hpp"
 
 template <unsigned int size>

@@ -1,34 +1,24 @@
 #ifndef NETWORKHANDLER_HPP
 #define NETWORKHANDLER_HPP
 #include <vector>
-#include "network.hpp"
+#include <array>
+#include <string>
+#include <cstdlib>
+#include <fstream>
 #include "node.hpp"
 
-template <unsigned int size>
 class NetworkHandler
 {
 private:
-    Network<size> network;
+    Node* network;
+    std::size_t size = 0;
+
+    std::ifstream input;
 
 public:
+    NetworkHandler(const std::string& utilityFile);
+    ~NetworkHandler();
     std::vector<const Node*& const> getAdjacentNodes(const std::vector<int>& nodes);
 };
-
-template <unsigned int size>
-std::vector<const Node*& const> NetworkHandler<size>::getAdjacentNodes(const std::vector<int>& nodes)
-{
-    std::vector<const Node*& const> returningNodes;
-    for (const int& node : nodes)
-    {
-        Node* currentNode = network[node];
-        while (currentNode != nullptr)
-        {
-            returningNodes.emplace_back(currentNode);
-            currentNode = currentNode->m_pNextNode;
-        }
-    }
-
-    return std::move(returningNodes);
-}
 
 #endif

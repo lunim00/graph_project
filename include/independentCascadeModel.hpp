@@ -1,7 +1,6 @@
 #ifndef INDEPENDENTCASCADEMODEL_HPP
 #define INDEPENDENTCASCADEMODEL_HPP
 #include <vector>
-#include "network.hpp"
 #include "networkHandler.hpp"
 
 namespace ICM

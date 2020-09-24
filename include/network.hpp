@@ -2,18 +2,11 @@
 #define NETWORK_HPP
 #include <array>
 #include "timeInterval.hpp"
+#include "node.hpp"
 
 template <unsigned int size>
 class Network
 {
-public:
-   struct Node 
-    {
-        unsigned int m_neighborID;
-        timeInterval m_diffusionTime;
-        Node* m_pNextNode;
-    };
-
 private:
     std::array<Node*, size> m_pNodes;
 
@@ -24,7 +17,7 @@ public:
 };
 
 template <unsigned int size>
-Network<size>::Node*& Network<size>::operator[](unsigned int index) const
+Node*& Network<size>::operator[](unsigned int index) const
 {
     if (index < 0)
         return nullptr;

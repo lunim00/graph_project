@@ -2,6 +2,7 @@
 #define NETWORKHANDLER_HPP
 #include <vector>
 #include "network.hpp"
+#include "node.hpp"
 
 template <unsigned int size>
 class NetworkHandler
@@ -10,13 +11,12 @@ private:
     Network network;
 
 public:
-    std::vector<const Network<size>::Node*& const> getAdjacentNodes(const std::vector<int>& nodes);
+    std::vector<const Node*& const> getAdjacentNodes(const std::vector<int>& nodes);
 };
 
-template <unsigned int size>
-std::vector<const Network<size>::Node*& const> getAdjacentNodes(const std::vector<int>& nodes)
+std::vector<const Node*& const> getAdjacentNodes(const std::vector<int>& nodes)
 {
-    std::vector<const Network<size>::Node*& const>&& returningNodes;
+    std::vector<const Node*& const>&& returningNodes;
     for (const int& node : nodes)
     {
         Node* currentNode = network[node];

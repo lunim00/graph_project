@@ -66,18 +66,34 @@ std::vector<const Node*& const> NetworkHandler::getAdjacentNodes(const std::vect
     std::vector<const Node*& const> returningNodes;
     for (const int& informed_node : nodes)
     {
-        while (network != nullptr)
-        {
-            if (network->getNodeID())
-        }
-
         // Node* currentNode = network + node;
         // while (currentNode != nullptr)
         // {
         //     returningNodes.emplace_back(currentNode);
         //     currentNode = currentNode->getNextNode();
-        // }
+        // }    
     }
 
     return returningNodes;
+}
+
+unsigned int NetworkHandler::hashingFunction(const unsigned int& num, const std::size_t& size) const
+{
+    unsigned int hashedNum = 0;
+    unsigned int n = num;
+    unsigned int count = 0;
+
+    while (n != 0)
+    {
+        ++count;
+        n /= 10;
+    }
+    for (int i = 0; i != count; ++i)
+    {
+        hashedNum += num / (count - i) * (i + 1);
+    }
+
+    hashedNum %= size;
+
+    return hashedNum;
 }

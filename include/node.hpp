@@ -8,7 +8,7 @@
 class Node
 {
 private:
-    unsigned int nodeID;
+    unsigned int m_nodeID;
     unsigned int m_neighborID;
     DiffusionTime m_diffusionTime[3];
     Node* m_pNextNode;

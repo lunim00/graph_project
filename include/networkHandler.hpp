@@ -15,6 +15,9 @@ private:
 
     std::ifstream input;
 
+    unsigned int hashingFunction(const unsigned int& num, const std::size_t& size) const;
+    //createHashTable()
+
 public:
     NetworkHandler(const std::string& utilityFile);
     ~NetworkHandler();

@@ -6,17 +6,22 @@
 #include <cstdlib>
 #include <fstream>
 #include "node.hpp"
+#include "nodeGroup.hpp"
 
+template <unsigned int size>
 class NetworkHandler
 {
 private:
-    Node* network;
+
+    NodeGroup* network;
     std::size_t size = 0;
 
     std::ifstream input;
 
+    void createNodeGroup(const std::size_t& index, Node* node);
+
     unsigned int hashingFunction(const unsigned int& num, const std::size_t& size) const;
-    //createHashTable()
+    void createHashTable(const std::string& utilityFile);
 
 public:
     NetworkHandler(const std::string& utilityFile);

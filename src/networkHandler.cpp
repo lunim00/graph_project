@@ -3,55 +3,7 @@
 
 NetworkHandler::NetworkHandler(const std::string& utilityFile)
 {
-    std::string line;
-    input.open(utilityFile);
-
-    while (getline(input, line))
-    {
-        Node* currentNode = this->network;
-        while (currentNode != nullptr)
-            currentNode = currentNode->getNextNode();
-
-        unsigned int index = 0;
-        
-        std::string date[8];
-
-        for (const char& chr : line)
-        {
-            if (chr == ' ' || chr == '-' || chr == ':')
-                ++index;
-            date[index] += chr;
-        }
-
-        DiffusionTime time[3] ={
-                        {
-                            stoi(date[2]),
-                            stoi(date[3]),
-                            stoi(date[4]),
-                            stoi(date[5]),
-                            stoi(date[6]),
-                            stoi(date[7])
-                        },
-                        {
-                            stoi(date[2]),
-                            stoi(date[3]),
-                            stoi(date[4]),
-                            stoi(date[5]),
-                            stoi(date[6]),
-                            stoi(date[7])
-                        },
-                        {
-                            stoi(date[2]),
-                            stoi(date[3]),
-                            stoi(date[4]),
-                            stoi(date[5]),
-                            stoi(date[6]),
-                            stoi(date[7])
-                        }
-                    };
-
-        currentNode = new Node(stoi(date[0]), stoi(date[1]), time, nullptr);
-    }
+    createHashTable(utilityFile);
 }
 
 NetworkHandler::~NetworkHandler()
@@ -82,18 +34,64 @@ unsigned int NetworkHandler::hashingFunction(const unsigned int& num, const std:
     unsigned int hashedNum = 0;
     unsigned int n = num;
     unsigned int count = 0;
+    unsigned int currentNum;
 
     while (n != 0)
     {
         ++count;
         n /= 10;
     }
-    for (int i = 0; i != count; ++i)
+    currentNum = num;
+    for (int i = 1; i != count; ++i)
     {
-        hashedNum += num / (count - i) * (i + 1);
+        // hashedNum += num / (count - i) * (i + 1);
+        unsigned int diff = currentNum % (10 ^ (count - i));
+        hashedNum += (currentNum - diff) * i;
+        currentNum = diff;
     }
 
-    hashedNum %= size;
+    hashedNum %= size; //se till att detta nummer är större än eller minst lika med storleken, 
+                       //annars kommer alla talen hamna på första indexet.
 
     return hashedNum;
+}
+
+void NetworkHandler::createHashTable(const std::string& utilityFile)
+{
+    input.open(utilityFile, std::ifstream::in);
+    std::string line;
+
+    unsigned int lineCount = 0;
+
+    while (std::getline(input, line))
+    {
+        ++lineCount;
+    }
+
+    lineCount *= 2;
+
+    input.close();
+
+
+    this->size = lineCount;
+
+
+    input.open(utilityFile, std::ifstream::in);
+
+    while (std::getline(input, line))
+    {
+        unsigned int index = input;
+    }
+
+    input.close();
+}
+
+void NetworkHandler::createNodeGroup(const std::size_t& index, Node* node)
+{
+    NodeGroup* nodeIndex = network + index;
+    while(nodeIndex != nullptr)
+    {
+        nodeIndex = nodeIndex->getNextNodeGroup();
+    }
+    nodeIndex = new NodeGroup(node, nullptr);
 }

@@ -1,5 +1,3 @@
-#ifndef INDEPENDENTCASCADEMODEL_HPP
-#define INDEPENDENTCASCADEMODEL_HPP
 #include <vector>
 #include <string>
 #include <random>
@@ -20,5 +18,3 @@ namespace ICM
         
     }
 }
-
-#endif

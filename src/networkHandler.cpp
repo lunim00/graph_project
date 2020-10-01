@@ -1,3 +1,4 @@
+#include <iostream>
 #include "networkHandler.hpp"
 #include "hashing.hpp"
 
@@ -15,9 +16,9 @@ NetworkHandler::~NetworkHandler()
     delete[] network;
 }
 
-std::vector<const node::Node*& const> NetworkHandler::getAdjacentNodes(const std::vector<unsigned int>& nodes)
+std::vector<node::Node*> NetworkHandler::getAdjacentNodes(const std::vector<unsigned int>& nodes)
 {
-    std::vector<const node::Node*& const> returningNodes;
+    std::vector<node::Node*> returningNodes;
     for (const int& informed_node : nodes)
     {
         NodeList* currentNodeList = network + hashing::hashingFunction(informed_node, this->networkSize);
@@ -39,12 +40,14 @@ std::vector<const node::Node*& const> NetworkHandler::getAdjacentNodes(const std
 void NetworkHandler::createHashTable(const std::string& utilityFile)
 {
     input.open(utilityFile, std::ifstream::in);
+    std::cout << "file opened" << std::endl;
     std::string line;
 
     std::string data[8];
 
    while (std::getline(input, line))
    {
+       std::cout << "line: " << line << std::endl;
        unsigned int index;
        for (const char& chr : line)
        {
@@ -79,8 +82,11 @@ void NetworkHandler::createHashTable(const std::string& utilityFile)
                 stoi(data[7])
             } 
         };
+        std::cout << "crasch 1?" << std::endl;
         createNodeList(stoi(data[0]), new node::Node(stoi(data[0]), stoi(data[1]), date, nullptr));
+        std::cout << "crasch 2?" << std::endl;
         createNodeList(stoi(data[1]), new node::Node(stoi(data[1]), stoi(data[0]), date, nullptr));
+        std::cout << "crasch 3?" << std::endl;
     }
 
     input.close();
@@ -90,13 +96,13 @@ void NetworkHandler::createNodeList(const unsigned int& ID, node::Node* node)
 {
     std::size_t index = hashing::hashingFunction(ID, this->networkSize);
     NodeList* nodeListIndex = network + index;
-    bool nodeExists = nodeListIndex->getNode()->getNodeID() == ID;
+    bool nodeExists = nodeListIndex->getNode() && nodeListIndex->getNode()->getNodeID() == ID;
     bool foundEmptySlot = nodeListIndex->getNode() == nullptr;
 
     while(!foundEmptySlot && !nodeExists)
     {
         nodeListIndex = nodeListIndex->getNextNodeList();
-        nodeExists = nodeListIndex->getNode()->getNodeID() == ID;
+        nodeExists = nodeListIndex->getNode() && nodeListIndex->getNode()->getNodeID() == ID;
         foundEmptySlot = nodeListIndex->getNode() == nullptr;
     }
     if (nodeExists)

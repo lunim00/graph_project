@@ -2,7 +2,7 @@
 #include "hashing.hpp"
 
 InformedNodes::InformedNodes(const std::size_t& size):
-nodes(new Node[size]{0, DiffusionTime(0, 0, 0, 0, 0, 0), nullptr}), size(size) //this works as long as there are no ID = 0
+nodes(new Node[size]), size(size) //this works as long as there are no ID = 0
 {
 
 }
@@ -25,7 +25,7 @@ void InformedNodes::addNode(const unsigned int& ID, const DiffusionTime& dt) //t
     //     *nodeIndex = {ID, nullptr};
     // else
     //     *nodeIndex = {ID, nullptr};
-    *nodeIndex = {ID, dt, nullptr};
+    *nodeIndex = Node(ID, dt, nullptr);
 }
 
 InformedNodes::Node* InformedNodes::getNode(const unsigned int& ID)
@@ -38,5 +38,20 @@ InformedNodes::Node* InformedNodes::getNode(const unsigned int& ID)
         nodeIndex = nodeIndex->nextNode;
     }
     return nodeIndex;
+}
 
+void InformedNodes::outputNodesToTerminal() const
+{
+    InformedNodes::Node* currentNode = this->nodes;
+    while (currentNode == currentNode + this->size)
+    {
+        std::cout << "(node Id: " << currentNode->index << ", time: " << currentNode->dt.toString() << ')' << std::endl;
+        InformedNodes::Node* nextNode = currentNode->nextNode;
+        while (nextNode != nullptr)
+        {
+            std::cout << "(node ID: " << nextNode->index << ", time: " << nextNode->dt.toString() << ')' << std::endl;
+            nextNode = nextNode->nextNode;
+        }
+        ++currentNode;
+    }
 }

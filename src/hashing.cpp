@@ -1,3 +1,4 @@
+#include <cmath>
 #include "hashing.hpp"
 
 unsigned int hashing::hashingFunction(const unsigned int& num, const std::size_t& size)
@@ -13,11 +14,11 @@ unsigned int hashing::hashingFunction(const unsigned int& num, const std::size_t
         n /= 10;
     }
     currentNum = num;
-    for (int i = 1; i != count; ++i)
+    for (unsigned int i = 0; i != count; ++i)
     {
         // hashedNum += num / (count - i) * (i + 1);
-        unsigned int diff = currentNum % (10 ^ (count - i));
-        hashedNum += (currentNum - diff) * i;
+        unsigned int diff = currentNum % static_cast<int>(std::pow(10, count - i - 1));
+        hashedNum += (currentNum - diff) * (i + 1);
         currentNum = diff;
     }
 

@@ -5,6 +5,6 @@
 namespace hashing
 {
     unsigned int hashingFunction(const unsigned int& num, const std::size_t& size);
-};
+}
 
 #endif

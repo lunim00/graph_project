@@ -5,8 +5,8 @@
 #include "informedNodes.hpp"
 
 InformedNodes icm::diffuseInformation(NetworkHandler& networkHandler, const std::vector<unsigned int>& seed, 
-                                                             const std::size_t& size, const float& beta = 1.0, 
-                                                             const std::string& diffusionTimeCase = "best_case")
+                                                             const std::size_t& size, const float& beta, 
+                                                             const std::string& diffusionTimeCase)
 {
     InformedNodes informedNodes = InformedNodes(size);
 
@@ -21,24 +21,27 @@ InformedNodes icm::diffuseInformation(NetworkHandler& networkHandler, const std:
     bool changed = true;
     while (changed)
     {
-        for (const node::Node* const node : networkHandler.getAdjacentNodes(informedNodesIDs))
+        for (node::Node* node : networkHandler.getAdjacentNodes(informedNodesIDs))
         {
             changed = false;
             //random not needed unless it's fast enough to use beta
             DiffusionTime uDT = informedNodes.getNode(node->getNodeID())->dt;
             if (uDT == DiffusionTime(0, 0, 0, 0, 0, 0) || uDT < node->getTimeInterval(diffusionTimeCase))
             {
-                //if (random < beta)
-                if (informedNodes.getNode(node->getNeighborID()) == nullptr)
+                float random = 1.0f;
+                if (random <= beta) //temporary
                 {
-                    informedNodes.addNode(node->getNeighborID(), node->getTimeInterval(diffusionTimeCase));
-                    informedNodesIDs.emplace_back(node->getNeighborID());
-                    changed = true;
-                }
-                else if (node->getTimeInterval(diffusionTimeCase) < informedNodes.getNode(node->getNeighborID())->dt)
-                {
-                    informedNodes.getNode(node->getNeighborID())->dt = node->getTimeInterval(diffusionTimeCase);
-                    changed = true;
+                    if (informedNodes.getNode(node->getNeighborID()) == nullptr)
+                    {
+                        informedNodes.addNode(node->getNeighborID(), node->getTimeInterval(diffusionTimeCase));
+                        informedNodesIDs.emplace_back(node->getNeighborID());
+                        changed = true;
+                    }
+                    else if (node->getTimeInterval(diffusionTimeCase) < informedNodes.getNode(node->getNeighborID())->dt)
+                    {
+                        informedNodes.getNode(node->getNeighborID())->dt = node->getTimeInterval(diffusionTimeCase);
+                        changed = true;
+                    }
                 }
             }
         }

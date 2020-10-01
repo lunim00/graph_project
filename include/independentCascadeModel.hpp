@@ -19,6 +19,6 @@ namespace icm
                                                             const std::size_t& size, const float& beta = 1.0, 
                                                             const std::string& diffusionTimeCase = "best_case");
 
-};
+}
 
 #endif

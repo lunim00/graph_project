@@ -21,6 +21,7 @@ public:
     bool operator<(const DiffusionTime& other) const;
     bool operator==(const DiffusionTime& other) const;
     bool operator<=(const DiffusionTime& other) const;
+    std::string toString() const;
 };
 
 #endif

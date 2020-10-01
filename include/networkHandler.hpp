@@ -24,7 +24,7 @@ private:
 public:
     NetworkHandler(const std::string& utilityFile, const std::size_t size);
     ~NetworkHandler();
-    std::vector<const node::Node*& const> getAdjacentNodes(const std::vector<unsigned int>& nodes);
+    std::vector<node::Node*> getAdjacentNodes(const std::vector<unsigned int>& nodes);
 };
 
 #endif

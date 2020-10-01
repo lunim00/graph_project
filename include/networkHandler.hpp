@@ -18,15 +18,13 @@ private:
 
     std::ifstream input;
 
-    void createNodeList(const unsigned int& ID, Node* node);
-
-    unsigned int hashingFunction(const unsigned int& num, const std::size_t& size) const;
+    void createNodeList(const unsigned int& ID, node::Node* node);
     void createHashTable(const std::string& utilityFile);
 
 public:
     NetworkHandler(const std::string& utilityFile, const std::size_t size);
     ~NetworkHandler();
-    std::vector<const Node*& const> getAdjacentNodes(const std::vector<unsigned int>& nodes);
+    std::vector<const node::Node*& const> getAdjacentNodes(const std::vector<unsigned int>& nodes);
 };
 
 #endif

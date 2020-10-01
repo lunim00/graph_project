@@ -26,6 +26,8 @@
         "xtr1common": "cpp",
         "xutility": "cpp",
         "string": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "random": "cpp",
+        "xstring": "cpp"
     }
 }

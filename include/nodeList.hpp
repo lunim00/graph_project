@@ -5,15 +5,15 @@
 class NodeList
 {
 private:
-    Node* m_pNode;
+    node::Node* m_pNode;
     NodeList* m_pNextNodeList;
 
 public:
     NodeList();
-    NodeList(Node* node, NodeList* nextNodeList);
+    NodeList(node::Node* node, NodeList* nextNodeList);
     ~NodeList();
 
-    Node*& getNode();
+    node::Node*& getNode();
     NodeList*& getNextNodeList();
 };
 

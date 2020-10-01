@@ -4,7 +4,7 @@
 #include <vector>
 #include <chrono>
 #include "networkHandler.hpp"
-#include "IndependentCascadeModel.cpp"
+#include "independentCascadeModel.hpp"
 #include "node.hpp"
 
 int main(int argc, char** argv)
@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     std::vector<unsigned int> seed;
     auto startTime = std::chrono::steady_clock::now();
 
-    std::vector<const Node* const> reachedNodes = ICM::diffuseInformation(handler, seed);
+    std::vector<const node::Node* const> reachedNodes = icm::diffuseInformation(handler, seed);
 
     auto endTime = std::chrono::steady_clock::now();
 

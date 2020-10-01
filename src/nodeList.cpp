@@ -5,7 +5,7 @@ m_pNode(nullptr), m_pNextNodeList(nullptr)
 {
 }
 
-NodeList::NodeList(Node* node, NodeList* NodeList):
+NodeList::NodeList(node::Node* node, NodeList* NodeList):
 m_pNode(node), m_pNextNodeList(NodeList)
 {
 
@@ -25,7 +25,7 @@ NodeList::~NodeList()
     }
 }
 
-Node*& NodeList::getNode()
+node::Node*& NodeList::getNode()
 {
     return this->m_pNode;
 }

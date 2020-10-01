@@ -1,6 +1,6 @@
 #include "node.hpp"
 
-Node::Node(const unsigned int& nodeID, const unsigned int& neighborID, const DiffusionTime diffusionTimes[3], Node* nextNode):
+node::Node::Node(const unsigned int& nodeID, const unsigned int& neighborID, const DiffusionTime diffusionTimes[3], Node* nextNode):
 m_nodeID(nodeID),
 m_neighborID(neighborID), 
 m_diffusionTime{diffusionTimes[0], diffusionTimes[1], diffusionTimes[2]}, 
@@ -8,14 +8,14 @@ m_pNextNode(nextNode)
 {
 }
 
-Node::~Node()
+node::Node::~Node()
 {
     if (m_pNextNode != nullptr)
         delete m_pNextNode;
     m_pNextNode = nullptr;
 }
 
-const DiffusionTime& Node::getTimeInterval(const std::string& timeCase) const
+const DiffusionTime& node::Node::getTimeInterval(const std::string& timeCase) const
 {
     try
     {
@@ -34,17 +34,17 @@ const DiffusionTime& Node::getTimeInterval(const std::string& timeCase) const
     }
 }
 
-const unsigned int& Node::getNodeID() const
+const unsigned int& node::Node::getNodeID() const
 {
     return this->m_nodeID;
 }
 
-const unsigned int& Node::getNeighborID() const
+const unsigned int& node::Node::getNeighborID() const
 {
     return this->m_neighborID;
 }
 
-Node* Node::getNextNode() const
+node::Node* node::Node::getNextNode() const
 {
     return this->m_pNextNode;
 }

@@ -1,4 +1,5 @@
 #include "networkHandler.hpp"
+#include "hashing.hpp"
 
 NetworkHandler::NetworkHandler(const std::string& utilityFile, const std::size_t size):
 network(new NodeList[size]), networkSize(size)
@@ -14,17 +15,17 @@ NetworkHandler::~NetworkHandler()
     delete[] network;
 }
 
-std::vector<const Node*& const> NetworkHandler::getAdjacentNodes(const std::vector<unsigned int>& nodes)
+std::vector<const node::Node*& const> NetworkHandler::getAdjacentNodes(const std::vector<unsigned int>& nodes)
 {
-    std::vector<const Node*& const> returningNodes;
+    std::vector<const node::Node*& const> returningNodes;
     for (const int& informed_node : nodes)
     {
-        NodeList* currentNodeList = network + hashingFunction(informed_node, this->networkSize);
+        NodeList* currentNodeList = network + hashing::hashingFunction(informed_node, this->networkSize);
         while (currentNodeList->getNode()->getNodeID() != informed_node)
         {
             currentNodeList = currentNodeList->getNextNodeList();
         }
-        Node* currentNode = currentNodeList->getNode();
+        node::Node* currentNode = currentNodeList->getNode();
         while (currentNode != nullptr)
         {
             returningNodes.emplace_back(currentNode);
@@ -33,33 +34,6 @@ std::vector<const Node*& const> NetworkHandler::getAdjacentNodes(const std::vect
     }
 
     return returningNodes;
-}
-
-unsigned int NetworkHandler::hashingFunction(const unsigned int& num, const std::size_t& size) const
-{
-    unsigned int hashedNum = 0;
-    unsigned int n = num;
-    unsigned int count = 0;
-    unsigned int currentNum;
-
-    while (n != 0)
-    {
-        ++count;
-        n /= 10;
-    }
-    currentNum = num;
-    for (int i = 1; i != count; ++i)
-    {
-        // hashedNum += num / (count - i) * (i + 1);
-        unsigned int diff = currentNum % (10 ^ (count - i));
-        hashedNum += (currentNum - diff) * i;
-        currentNum = diff;
-    }
-
-    hashedNum %= size; //se till att detta nummer är större än eller minst lika med storleken, 
-                       //annars kommer alla talen hamna på första indexet.
-
-    return hashedNum;
 }
 
 void NetworkHandler::createHashTable(const std::string& utilityFile)
@@ -81,14 +55,13 @@ void NetworkHandler::createHashTable(const std::string& utilityFile)
        }
        DiffusionTime date[3] = {
             {
-            stoi(data[2]),
-            stoi(data[3]),
-            stoi(data[4]),
-            stoi(data[5]),
-            stoi(data[6]),
-            stoi(data[7])
-            }
-            ,
+                stoi(data[2]),
+                stoi(data[3]),
+                stoi(data[4]),
+                stoi(data[5]),
+                stoi(data[6]),
+                stoi(data[7])
+            },
             {
                 stoi(data[2]),
                 stoi(data[3]),
@@ -96,8 +69,7 @@ void NetworkHandler::createHashTable(const std::string& utilityFile)
                 stoi(data[5]),
                 stoi(data[6]),
                 stoi(data[7])
-            }
-            ,
+            },
             {
                 stoi(data[2]),
                 stoi(data[3]),
@@ -107,27 +79,29 @@ void NetworkHandler::createHashTable(const std::string& utilityFile)
                 stoi(data[7])
             } 
         };
-        createNodeList(hashingFunction(stoi(data[0]), this->networkSize), new Node(stoi(data[0]), stoi(data[1]), date, nullptr));
-        createNodeList(hashingFunction(stoi(data[1]), this->networkSize), new Node(stoi(data[1]), stoi(data[0]), date, nullptr));
+        createNodeList(stoi(data[0]), new node::Node(stoi(data[0]), stoi(data[1]), date, nullptr));
+        createNodeList(stoi(data[1]), new node::Node(stoi(data[1]), stoi(data[0]), date, nullptr));
     }
 
     input.close();
 }
 
-void NetworkHandler::createNodeList(const unsigned int& ID, Node* node)
+void NetworkHandler::createNodeList(const unsigned int& ID, node::Node* node)
 {
-    std::size_t index = ID;
+    std::size_t index = hashing::hashingFunction(ID, this->networkSize);
     NodeList* nodeListIndex = network + index;
-    bool notFoundNodeID = nodeListIndex->getNode() != nullptr && nodeListIndex->getNode()->getNodeID() != ID;
-    bool nodeListSlotNotEmpty = nodeListIndex != nullptr;
+    bool nodeExists = nodeListIndex->getNode()->getNodeID() == ID;
+    bool foundEmptySlot = nodeListIndex->getNode() == nullptr;
 
-    while(notFoundNodeID || nodeListSlotNotEmpty)
+    while(!foundEmptySlot && !nodeExists)
     {
         nodeListIndex = nodeListIndex->getNextNodeList();
+        nodeExists = nodeListIndex->getNode()->getNodeID() == ID;
+        foundEmptySlot = nodeListIndex->getNode() == nullptr;
     }
-    if (!notFoundNodeID)
+    if (nodeExists)
     {
-        Node* currentNode = nodeListIndex->getNode();
+        node::Node* currentNode = nodeListIndex->getNode();
         while (currentNode != nullptr)
         {
             currentNode = currentNode->getNextNode();
@@ -137,6 +111,6 @@ void NetworkHandler::createNodeList(const unsigned int& ID, Node* node)
     else
     {
         *nodeListIndex = NodeList(node, nullptr);      
-        //this might cause problems, so you should probably look it over :P
+        //this might cause problems, so you should probably look at it :P
     }
 }

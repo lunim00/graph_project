@@ -1,3 +1,4 @@
+#include <iostream>
 #include "independentCascadeModel.hpp"
 #include "nodeList.hpp"
 #include "node.hpp"
@@ -9,9 +10,8 @@ InformedNodes icm::diffuseInformation(NetworkHandler& networkHandler, const std:
                                                              const std::string& diffusionTimeCase)
 {
     InformedNodes informedNodes = InformedNodes(size);
-
     std::vector<unsigned int> informedNodesIDs;
-
+    
     for (const unsigned int node : seed)
     {
         informedNodes.addNode(node, DiffusionTime(0, 0, 0, 0, 0, 0));
@@ -21,8 +21,11 @@ InformedNodes icm::diffuseInformation(NetworkHandler& networkHandler, const std:
     bool changed = true;
     while (changed)
     {
-        for (node::Node* node : networkHandler.getAdjacentNodes(informedNodesIDs))
+        for (node::Node* node : networkHandler.getAdjacentNodes(informedNodesIDs)) //problem is here
         {
+            // for (const unsigned int& informed : informedNodesIDs)
+            //     std::cout << "node: " << informed << std::endl;
+            // std::cout << std::endl;
             changed = false;
             //random not needed unless it's fast enough to use beta
             DiffusionTime uDT = informedNodes.getNode(node->getNodeID())->dt;
@@ -46,6 +49,9 @@ InformedNodes icm::diffuseInformation(NetworkHandler& networkHandler, const std:
             }
         }
     }
+
+    for (const unsigned num : informedNodesIDs)
+        std::cout << "node: " << num << std::endl;
     return informedNodes;
 }
 

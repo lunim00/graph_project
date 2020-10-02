@@ -8,6 +8,15 @@ m_pNextNode(nextNode)
 {
 }
 
+node::Node::Node(const node::Node& other)
+{
+    this->m_nodeID = other.m_nodeID;
+    this->m_neighborID = other.m_neighborID;
+    for (unsigned int i = 0; i != 3; ++i)
+        this->m_diffusionTime[i] = other.m_diffusionTime[i];
+    this->m_pNextNode = other.m_pNextNode;
+}
+
 node::Node::~Node()
 {
     if (m_pNextNode != nullptr)
@@ -47,4 +56,9 @@ const unsigned int& node::Node::getNeighborID() const
 node::Node* node::Node::getNextNode() const
 {
     return this->m_pNextNode;
+}
+
+void node::Node::setNextNode(node::Node* nextNode)
+{
+    this->m_pNextNode = nextNode;
 }

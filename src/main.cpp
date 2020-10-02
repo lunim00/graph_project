@@ -16,7 +16,9 @@ int main(int argc, char** argv)
     std::cout << "size: " << size << std::endl;
     NetworkHandler handler = NetworkHandler(file, size);
 
-    std::vector<unsigned int> seed;
+    std::cout << "handler created" << std::endl;
+
+    std::vector<unsigned int> seed = {1};
     auto startTime = std::chrono::steady_clock::now();
 
     InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, size);
@@ -26,6 +28,8 @@ int main(int argc, char** argv)
     auto time = endTime - startTime;
 
     reachedNodes.outputNodesToTerminal();
+
+    std::cout << "reached end of program" << std::endl;
 
     return 0;
 };

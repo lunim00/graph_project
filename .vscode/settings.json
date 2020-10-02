@@ -29,6 +29,7 @@
         "fstream": "cpp",
         "random": "cpp",
         "xstring": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "ostream": "cpp"
     }
 }

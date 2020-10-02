@@ -10,9 +10,9 @@ network(new NodeList[size]), networkSize(size)
 
 NetworkHandler::~NetworkHandler()
 {
-    if (network != nullptr)
-        delete network;
-    network = nullptr;
+    // if (network != nullptr)
+    //     delete network;
+    // network = nullptr;
     delete[] network;
 }
 
@@ -43,20 +43,20 @@ void NetworkHandler::createHashTable(const std::string& utilityFile)
     std::cout << "file opened" << std::endl;
     std::string line;
 
-    std::string data[8];
 
    while (std::getline(input, line))
    {
-       std::cout << "line: " << line << std::endl;
-       unsigned int index;
-       for (const char& chr : line)
-       {
+        std::cout << "line: " << line << std::endl;
+        std::string data[8];
+        unsigned int index = 0;
+        for (const char& chr : line)
+        {
             if (chr == ' ' || chr == '-' || chr == ':')
                 ++index;
             else
                 data[index] += chr;
-       }
-       DiffusionTime date[3] = {
+        }
+        DiffusionTime date[3] = {
             {
                 stoi(data[2]),
                 stoi(data[3]),
@@ -95,28 +95,30 @@ void NetworkHandler::createHashTable(const std::string& utilityFile)
 void NetworkHandler::createNodeList(const unsigned int& ID, node::Node* node)
 {
     std::size_t index = hashing::hashingFunction(ID, this->networkSize);
-    NodeList* nodeListIndex = network + index;
-    bool nodeExists = nodeListIndex->getNode() && nodeListIndex->getNode()->getNodeID() == ID;
-    bool foundEmptySlot = nodeListIndex->getNode() == nullptr;
+    NodeList* currentNodeList = this->network + index;
 
-    while(!foundEmptySlot && !nodeExists)
+    while (currentNodeList != nullptr && currentNodeList->getNode() != nullptr && currentNodeList->getNode()->getNodeID() != index)
     {
-        nodeListIndex = nodeListIndex->getNextNodeList();
-        nodeExists = nodeListIndex->getNode() && nodeListIndex->getNode()->getNodeID() == ID;
-        foundEmptySlot = nodeListIndex->getNode() == nullptr;
+        currentNodeList = currentNodeList->getNextNodeList();
     }
-    if (nodeExists)
+
+    if (currentNodeList == nullptr)
     {
-        node::Node* currentNode = nodeListIndex->getNode();
-        while (currentNode != nullptr)
+        currentNodeList = new NodeList(node, nullptr);
+    }
+    else if (currentNodeList->getNode() == nullptr)
+    {
+        currentNodeList->getNode() = node;
+    }
+    else if (currentNodeList->getNode()->getNodeID() == index)
+    {
+        node::Node* currentNode = currentNodeList->getNode();
+        while (currentNode->getNextNode() != nullptr)
         {
             currentNode = currentNode->getNextNode();
         }
-        *currentNode = *node;
+        currentNode->setNextNode(node);
+
     }
-    else
-    {
-        *nodeListIndex = NodeList(node, nullptr);      
-        //this might cause problems, so you should probably look at it :P
-    }
+
 }

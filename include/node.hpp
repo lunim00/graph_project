@@ -17,11 +17,13 @@ namespace node
     public:
         Node() = delete;
         Node(const unsigned int& nodeID, const unsigned int& neighborID, const DiffusionTime diffusionTimes[3], Node* nextNode);
+        Node(const node::Node& other);
         ~Node();
 
         const DiffusionTime& getTimeInterval(const std::string& timeCase) const;
         const unsigned int& getNodeID() const;
         const unsigned int& getNeighborID() const;
+        void setNextNode(node::Node* nextNode);
         Node* getNextNode() const;
     };
 }

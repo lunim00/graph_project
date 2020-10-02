@@ -36,7 +36,7 @@ const DiffusionTime& Node::getTimeInterval(const std::string& timeCase) const
 
 const unsigned int& Node::getNodeID() const
 {
-    return this->getNodeID;
+    return this->nodeID;
 }
 
 const unsigned int& Node::getNeighborID() const

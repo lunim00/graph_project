@@ -1,83 +1,124 @@
+#include <iostream>
 #include "networkHandler.hpp"
-#include "diffusionTime.hpp"
+#include "hashing.hpp"
 
-NetworkHandler::NetworkHandler(const std::string& utilityFile)
+NetworkHandler::NetworkHandler(const std::string& utilityFile, const std::size_t size):
+network(new NodeList[size]), networkSize(size)
 {
-    std::string line;
-    input.open(utilityFile);
-
-    while (getline(input, line))
-    {
-        Node* currentNode = this->network;
-        while (currentNode != nullptr)
-            currentNode = currentNode->getNextNode();
-
-        unsigned int index = 0;
-        
-        std::string date[8];
-
-        for (const char& chr : line)
-        {
-            if (chr == ' ' || chr == '-' || chr == ':')
-                ++index;
-            date[index] += chr;
-        }
-
-        DiffusionTime time[3] ={
-                        {
-                            stoi(date[2]),
-                            stoi(date[3]),
-                            stoi(date[4]),
-                            stoi(date[5]),
-                            stoi(date[6]),
-                            stoi(date[7])
-                        },
-                        {
-                            stoi(date[2]),
-                            stoi(date[3]),
-                            stoi(date[4]),
-                            stoi(date[5]),
-                            stoi(date[6]),
-                            stoi(date[7])
-                        },
-                        {
-                            stoi(date[2]),
-                            stoi(date[3]),
-                            stoi(date[4]),
-                            stoi(date[5]),
-                            stoi(date[6]),
-                            stoi(date[7])
-                        }
-                    };
-
-        currentNode = new Node(stoi(date[0]), stoi(date[1]), time, nullptr);
-    }
+    createHashTable(utilityFile);
 }
 
 NetworkHandler::~NetworkHandler()
 {
-    if (network != nullptr)
-        delete network;
-    network = nullptr;
+    // if (network != nullptr)
+    //     delete network;
+    // network = nullptr;
+    delete[] network;
 }
 
-std::vector<const Node*& const> NetworkHandler::getAdjacentNodes(const std::vector<int>& nodes)
+std::vector<node::Node*> NetworkHandler::getAdjacentNodes(const std::vector<unsigned int>& nodes)
 {
-    std::vector<const Node*& const> returningNodes;
+    std::vector<node::Node*> returningNodes;
     for (const int& informed_node : nodes)
     {
-        while (network != nullptr)
+        NodeList* currentNodeList = network + hashing::hashingFunction(informed_node, this->networkSize);
+        while (currentNodeList->getNode()->getNodeID() != informed_node)
         {
-            if (network->getNodeID())
+            currentNodeList = currentNodeList->getNextNodeList();
         }
-
-        // Node* currentNode = network + node;
-        // while (currentNode != nullptr)
-        // {
-        //     returningNodes.emplace_back(currentNode);
-        //     currentNode = currentNode->getNextNode();
-        // }
+        node::Node* currentNode = currentNodeList->getNode();
+        while (currentNode != nullptr)
+        {
+            returningNodes.emplace_back(currentNode);
+            currentNode = currentNode->getNextNode();
+        }
     }
 
     return returningNodes;
+}
+
+void NetworkHandler::createHashTable(const std::string& utilityFile)
+{
+    input.open(utilityFile, std::ifstream::in);
+    std::cout << "file opened" << std::endl;
+    std::string line;
+
+
+   while (std::getline(input, line))
+   {
+        std::cout << "line: " << line << std::endl;
+        std::string data[8];
+        unsigned int index = 0;
+        for (const char& chr : line)
+        {
+            if (chr == ' ' || chr == '-' || chr == ':')
+                ++index;
+            else
+                data[index] += chr;
+        }
+        DiffusionTime date[3] = {
+            {
+                stoi(data[2]),
+                stoi(data[3]),
+                stoi(data[4]),
+                stoi(data[5]),
+                stoi(data[6]),
+                stoi(data[7])
+            },
+            {
+                stoi(data[2]),
+                stoi(data[3]),
+                stoi(data[4]),
+                stoi(data[5]),
+                stoi(data[6]),
+                stoi(data[7])
+            },
+            {
+                stoi(data[2]),
+                stoi(data[3]),
+                stoi(data[4]),
+                stoi(data[5]),
+                stoi(data[6]),
+                stoi(data[7])
+            } 
+        };
+        std::cout << "crasch 1?" << std::endl;
+        createNodeList(stoi(data[0]), new node::Node(stoi(data[0]), stoi(data[1]), date, nullptr));
+        std::cout << "crasch 2?" << std::endl;
+        createNodeList(stoi(data[1]), new node::Node(stoi(data[1]), stoi(data[0]), date, nullptr));
+        std::cout << "crasch 3?" << std::endl;
+    }
+
+    input.close();
+}
+
+void NetworkHandler::createNodeList(const unsigned int& ID, node::Node* node)
+{
+    std::size_t index = hashing::hashingFunction(ID, this->networkSize);
+    NodeList* currentNodeList = this->network + index;
+
+    while (currentNodeList != nullptr && currentNodeList->getNode() != nullptr && currentNodeList->getNode()->getNodeID() != index)
+    {
+        currentNodeList = currentNodeList->getNextNodeList();
+    }
+
+    if (currentNodeList == nullptr)
+    {
+        currentNodeList = new NodeList(node, nullptr);
+    }
+    else if (currentNodeList->getNode() == nullptr)
+    {
+        currentNodeList->getNode() = node;
+    }
+    else if (currentNodeList->getNode()->getNodeID() == index)
+    {
+        node::Node* currentNode = currentNodeList->getNode();
+        while (currentNode->getNextNode() != nullptr)
+        {
+            currentNode = currentNode->getNextNode();
+        }
+        currentNode->setNextNode(node);
+
+    }
+
 }

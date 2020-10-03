@@ -5,20 +5,26 @@
 #include <string>
 #include <cstdlib>
 #include <fstream>
+#include <algorithm>
 #include "node.hpp"
+#include "nodeList.hpp"
+#include "diffusionTime.hpp"
 
 class NetworkHandler
 {
 private:
-    Node* network;
-    std::size_t size = 0;
+    NodeList* network;
+    std::size_t networkSize;
 
     std::ifstream input;
 
+    void createNodeList(const unsigned int& ID, node::Node* node);
+    void createHashTable(const std::string& utilityFile);
+
 public:
-    NetworkHandler(const std::string& utilityFile);
+    NetworkHandler(const std::string& utilityFile, const std::size_t size);
     ~NetworkHandler();
-    std::vector<const Node*& const> getAdjacentNodes(const std::vector<int>& nodes);
+    std::vector<node::Node*> getAdjacentNodes(const std::vector<unsigned int>& nodes);
 };
 
 #endif

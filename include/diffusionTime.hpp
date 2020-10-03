@@ -13,7 +13,7 @@ private:
     unsigned int second;
 
 public:
-    DiffusionTime() = delete;
+    DiffusionTime();
     DiffusionTime(const unsigned int& year, const unsigned int& month, 
                   const unsigned int& day, const unsigned int& hour, 
                   const unsigned int& minute, const unsigned int& second);
@@ -21,6 +21,7 @@ public:
     bool operator<(const DiffusionTime& other) const;
     bool operator==(const DiffusionTime& other) const;
     bool operator<=(const DiffusionTime& other) const;
+    std::string toString() const;
 };
 
 #endif

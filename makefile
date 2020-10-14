@@ -14,8 +14,8 @@ else
 	DELETE := rm
 endif
 
-CPP := g++
-CPPFLAGS := -g -std=c++17 
+CPP := g++ 
+CPPFLAGS := -g -std=c++17 -Wall -Wextra -Wpedantic -Werror
 
 implementation: $(EXECUTABLE)
 #skriv körningen för implementationen med dina egna tester i :D

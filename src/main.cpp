@@ -10,26 +10,56 @@
 
 int main(int argc, char** argv)
 {
-    std::string file = argv[1];
-    std::cout << "file: " << file << std::endl;
-    unsigned int size = stoi(std::string(argv[2]));
-    std::cout << "size: " << size << std::endl;
-    NetworkHandler handler = NetworkHandler(file, size);
+    std::cout << argc << std::endl;
 
-    std::cout << "handler created" << std::endl;
-
-    std::vector<unsigned int> seed = {1};
+    auto totalStartTime = std::chrono::steady_clock::now();
     auto startTime = std::chrono::steady_clock::now();
-
-    InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, size);
-
+    std::string file = argv[1];
+    // std::cout << "file: " << file << std::endl;
+    unsigned int size = stoi(std::string(argv[2]));
+    // std::cout << "size: " << size << std::endl;
+    NetworkHandler handler = NetworkHandler(file, size);
     auto endTime = std::chrono::steady_clock::now();
 
-    auto time = endTime - startTime;
+    std::cout << "Input read" << std::endl;
+
+    std::chrono::duration<double> time = endTime - startTime;
+
+    std::cout << "took: " << time.count() << " seconds." << std::endl;
+
+    std::vector<unsigned int> seed;
+    for (int i = 3; i != argc; ++i)
+    {
+        seed.push_back(std::stoul(argv[i]));
+        std::cout << "node: " << argv[i] << std::endl;
+    }
+
+    for (const unsigned int node : seed)
+    {
+        std::cout << "satsat: " << node << std::endl;
+    }
+
+    // std::vector<unsigned int> seed = {1000205}; //1000205
+    startTime = std::chrono::steady_clock::now();
+
+    InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, size, 1.0, "best_case");
+
+    endTime = std::chrono::steady_clock::now();
+    time = endTime - startTime;
+
+    std::cout << "Ran ICM algorithm" << std::endl;
+    std::cout << "took: " << time.count() << " seconds." << std::endl;
+
+    time = endTime - startTime;
 
     reachedNodes.outputNodesToTerminal();
 
     std::cout << "reached end of program" << std::endl;
 
+    endTime = std::chrono::steady_clock::now();
+    time = endTime - totalStartTime;
+
+    std::cout << "took: " << time.count() << " sec" << std::endl;
+
     return 0;
-};
+}

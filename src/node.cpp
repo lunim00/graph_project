@@ -41,6 +41,7 @@ const DiffusionTime& node::Node::getTimeInterval(const std::string& timeCase) co
     {
         std::cerr << e.what() << '\n';
     }
+    return m_diffusionTime[0];
 }
 
 const unsigned int& node::Node::getNodeID() const

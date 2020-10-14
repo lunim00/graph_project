@@ -16,20 +16,31 @@ year(year), month(month), day(day), hour(hour), minute(minute), second(second)
 
 bool DiffusionTime::operator<(const DiffusionTime& other) const
 {
-    if (other.year < this->year)
+    if (this->year < other.year)
+        return true;
+    else if (other.year < this->year)
         return false;
-    if (other.month < this->month)
+    if (this->month < other.month)
+        return true;
+    else if (other.month < this->month)
         return false;
-    if (other.day < this->day)
+    if (this->day < other.day)
+        return true;
+    else if (other.day < this->day)
         return false;
-    if (other.hour < this->hour)
+    if (this->hour < other.hour)
+        return true;
+    else if (other.hour < this->hour)
         return false;
-    if (other.minute < this->minute)
+    if (this->minute < other.minute)
+        return true;
+    else if (other.minute < this->minute)
         return false;
-    if (other.second < this->second)
+    if (this->second < other.second)
+        return true;
+    else if (other.second < this->second)
         return false;
-
-    return true;
+    return false;
 }
 
 bool DiffusionTime::operator==(const DiffusionTime& other) const

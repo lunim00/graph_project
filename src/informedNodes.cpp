@@ -15,17 +15,17 @@ InformedNodes::~InformedNodes()
 void InformedNodes::addNode(const unsigned int& ID, const DiffusionTime& dt) //timestamp
 {
     std::size_t index = hashing::hashingFunction(ID, this->size);
-    InformedNodes::Node* nodeIndex = nodes + index;
+    // InformedNodes::Node* nodeIndexStart = nodes + index;
+    InformedNodes::Node* nodeIndexCurrent = nodes + index;
 
-    while (nodeIndex->index != 0) // == 0 is just for testing purposes... this should be changed, will cause problems if this is nullptr
+    while (nodeIndexCurrent != nullptr && nodeIndexCurrent->nextNode != nullptr && nodeIndexCurrent->index != 0)
     {
-        nodeIndex->nextNode;
+        nodeIndexCurrent = nodeIndexCurrent->nextNode;
     }
-    // if (nodeIndex == nullptr)
-    //     *nodeIndex = {ID, nullptr};
-    // else
-    //     *nodeIndex = {ID, nullptr};
-    *nodeIndex = Node(ID, dt, nullptr);
+    if (nodeIndexCurrent->index == 0)
+        *nodeIndexCurrent = InformedNodes::Node(ID, dt, nullptr);
+    else if (nodeIndexCurrent->nextNode == nullptr)
+        nodeIndexCurrent->nextNode = new InformedNodes::Node(ID, dt, nullptr);
 }
 
 InformedNodes::Node* InformedNodes::getNode(const unsigned int& ID)
@@ -33,7 +33,7 @@ InformedNodes::Node* InformedNodes::getNode(const unsigned int& ID)
     std::size_t index = hashing::hashingFunction(ID, this->size);
     InformedNodes::Node* nodeIndex = nodes + index;
     
-    while (nodeIndex != nullptr && nodeIndex->index != index)
+    while (nodeIndex != nullptr && nodeIndex->index != ID)
     {
         nodeIndex = nodeIndex->nextNode;
     }

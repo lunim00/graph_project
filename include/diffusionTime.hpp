@@ -13,6 +13,7 @@ private:
     unsigned int second;
 
 public:
+
     DiffusionTime();
     DiffusionTime(const unsigned int& year, const unsigned int& month, 
                   const unsigned int& day, const unsigned int& hour, 

@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/bin/Project.exe",
-            "args": ["./utility/data.txt", "11"],
+            "args": ["./utility/android.txt", "10729", "1000205"],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],

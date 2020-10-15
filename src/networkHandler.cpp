@@ -49,51 +49,11 @@ void NetworkHandler::createHashTable(const std::string& utilityFile)
 
    while (std::getline(input, line))
    {
-       currentLine = line;
-        // // std::cout << "line: " << line << std::endl;
-        // std::string data[8];
-        // unsigned int index = 0;
-        // for (const char& chr : line)
-        // {
-        //     if (chr == ' ' || chr == '-' || chr == ':')
-        //         ++index;
-        //     else
-        //         data[index] += chr;
-        // }
-        // DiffusionTime date[3] = {
-        //     {
-        //         stoul(data[2]),
-        //         stoul(data[3]),
-        //         stoul(data[4]),
-        //         stoul(data[5]),
-        //         stoul(data[6]),
-        //         stoul(data[7])
-        //     },
-        //     {
-        //         stoul(data[2]),
-        //         stoul(data[3]),
-        //         stoul(data[4]),
-        //         stoul(data[5]),
-        //         stoul(data[6]),
-        //         stoul(data[7])
-        //     },
-        //     {
-        //         stoul(data[2]),
-        //         stoul(data[3]),
-        //         stoul(data[4]),
-        //         stoul(data[5]),
-        //         stoul(data[6]),
-        //         stoul(data[7])
-        //     } 
-        // };
-        // // std::cout << "crasch 1?" << std::endl;
-        // createNodeList(stoi(data[0]), new node::Node(stoi(data[0]), stoi(data[1]), date, nullptr));
-        // // std::cout << "crasch 2?" << std::endl;
-        // createNodeList(stoi(data[1]), new node::Node(stoi(data[1]), stoi(data[0]), date, nullptr));
-        // // std::cout << "crasch 3?" << std::endl;
+        currentLine = line;
 
-        int node1 = stoul(line.substr(0, 7));
-        int node2 = stoul(line.substr(8, 7));
+        int node1 = stoul(currentLine.substr(0, currentLine.find(" ")));
+        currentLine = currentLine.substr(currentLine.find(" ") + 1, currentLine.length());
+        int node2 = stoul(currentLine.substr(0, currentLine.find(" ")));
         DiffusionTime date[3];
 
         for (unsigned int i = 0; i != 3; ++i)

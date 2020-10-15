@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <time.h>
 #include "independentCascadeModel.hpp"
 #include "nodeList.hpp"
 #include "node.hpp"
@@ -8,6 +10,7 @@ InformedNodes icm::diffuseInformation(NetworkHandler& networkHandler, const std:
                                                              const std::size_t& size, const float& beta, 
                                                              const std::string& diffusionTimeCase)
 {
+    srand(time(nullptr));
     InformedNodes informedNodes = InformedNodes(size);
     std::vector<unsigned int> informedNodesIDs;
     
@@ -30,7 +33,7 @@ InformedNodes icm::diffuseInformation(NetworkHandler& networkHandler, const std:
             DiffusionTime uDT = informedNodes.getNode(node->getNodeID())->dt;
             if (uDT == DiffusionTime(0, 0, 0, 0, 0, 0) || uDT < node->getTimeInterval(diffusionTimeCase))
             {
-                float random = 1.0f;
+                float random = rand() / static_cast<float>(RAND_MAX);
                 if (random <= beta) //temporary
                 {
                     if (informedNodes.getNode(node->getNeighborID()) == nullptr)

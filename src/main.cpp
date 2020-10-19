@@ -14,10 +14,10 @@ int main(int argc, char** argv)
 
     auto totalStartTime = std::chrono::steady_clock::now();
     auto startTime = std::chrono::steady_clock::now();
+
     std::string file = argv[1];
-    // std::cout << "file: " << file << std::endl;
     unsigned int size = std::stoul(std::string(argv[2]));
-    // std::cout << "size: " << size << std::endl;
+    
     NetworkHandler handler = NetworkHandler(file, size);
     auto endTime = std::chrono::steady_clock::now();
 

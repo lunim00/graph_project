@@ -10,14 +10,23 @@
 
 int main(int argc, char** argv)
 {
-    std::cout << argc << std::endl;
+
+    if (argc < 7)
+    {
+        std::cerr << "To few arguments" << std::endl;
+        return 1;
+    }
 
     auto totalStartTime = std::chrono::steady_clock::now();
     auto startTime = std::chrono::steady_clock::now();
-
     std::string file = argv[1];
+    // std::cout << "file: " << file << std::endl;
     unsigned int size = std::stoul(std::string(argv[2]));
-    
+    // std::cout << "size: " << size << std::endl;
+    std::string dtCase = argv[3];
+    float beta = stof(std::string(argv[4]));
+    std::string output = argv[5];
+    std::cout << dtCase << std::endl;
     NetworkHandler handler = NetworkHandler(file, size);
     auto endTime = std::chrono::steady_clock::now();
 
@@ -28,14 +37,14 @@ int main(int argc, char** argv)
     std::cout << "took: " << time.count() << " seconds." << std::endl;
 
     std::vector<unsigned int> seed;
-    for (int i = 3; i != argc; ++i)
+    for (int i = 6; i != argc; ++i)
     {
         seed.push_back(std::stoul(argv[i]));
     }
     // std::vector<unsigned int> seed = {1000205}; //1000205
     startTime = std::chrono::steady_clock::now();
 
-    InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, size, 1.0, "best_case");
+    InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, size, beta, dtCase);
 
     endTime = std::chrono::steady_clock::now();
     time = endTime - startTime;
@@ -45,37 +54,17 @@ int main(int argc, char** argv)
 
     time = endTime - startTime;
 
-    reachedNodes.outputNodesToTerminal();
+    if (output == "terminal")
+        reachedNodes.outputNodesToTerminal();
+    else
+        reachedNodes.outputNodesToFile(output);
 
     std::cout << "reached end of program" << std::endl;
 
     endTime = std::chrono::steady_clock::now();
     time = endTime - totalStartTime;
 
-    std::cout << "took: " << time.count() << " sec" << std::endl;
-
-///////////////////////////////////
-
-    startTime = std::chrono::steady_clock::now();
-
-    InformedNodes reachedNodes2 = icm::diffuseInformation(handler, seed, size, 1.0, "worst_case");
-
-    endTime = std::chrono::steady_clock::now();
-    time = endTime - startTime;
-
-    std::cout << "Ran ICM algorithm" << std::endl;
-    std::cout << "took: " << time.count() << " seconds." << std::endl;
-
-    time = endTime - startTime;
-
-    reachedNodes2.outputNodesToTerminal();
-
-    std::cout << "reached end of program" << std::endl;
-
-    endTime = std::chrono::steady_clock::now();
-    time = endTime - totalStartTime;
-
-    std::cout << "took: " << time.count() << " sec" << std::endl;
+    std::cout << "took in total: " << time.count() << " sec" << std::endl;
 
     return 0;
 }

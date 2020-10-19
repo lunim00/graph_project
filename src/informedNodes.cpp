@@ -1,3 +1,5 @@
+#include <iostream>
+#include <fstream>
 #include "informedNodes.hpp"
 #include "hashing.hpp"
 
@@ -57,4 +59,30 @@ void InformedNodes::outputNodesToTerminal() const
         }
         ++currentNode;
     }
+}
+
+void InformedNodes::outputNodesToFile(const std::string& filePath) const
+{
+    std::ofstream output;
+    
+    std::string outputStr = "";
+
+    InformedNodes::Node* currentNode = this->nodes;
+    InformedNodes::Node* startNode = this->nodes;
+    while (currentNode != startNode + this->size)
+    {
+        // std::cout << "(node Id: " << currentNode->index << ", time: " << currentNode->dt.toString() << ')' << std::endl;
+        // InformedNodes::Node* nextNode = currentNode->nextNode;
+        InformedNodes::Node* nextNode = currentNode;
+        while (nextNode != nullptr)
+        {
+            if (nextNode->index != 0)
+                outputStr += "(node ID: " + std::to_string(nextNode->index) + ", time: " + nextNode->dt.toString() + ")\n";
+            nextNode = nextNode->nextNode;
+        }
+        ++currentNode;
+    }
+    output.open(filePath);
+    output << outputStr;
+    output.close();
 }

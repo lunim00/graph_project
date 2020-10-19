@@ -11,7 +11,7 @@
 int main(int argc, char** argv)
 {
 
-    if (argc < 6)
+    if (argc < 7)
     {
         std::cerr << "To few arguments" << std::endl;
         return 1;
@@ -25,6 +25,7 @@ int main(int argc, char** argv)
     // std::cout << "size: " << size << std::endl;
     std::string dtCase = argv[3];
     float beta = stof(std::string(argv[4]));
+    std::string output = argv[5];
     std::cout << dtCase << std::endl;
     NetworkHandler handler = NetworkHandler(file, size);
     auto endTime = std::chrono::steady_clock::now();
@@ -36,7 +37,7 @@ int main(int argc, char** argv)
     std::cout << "took: " << time.count() << " seconds." << std::endl;
 
     std::vector<unsigned int> seed;
-    for (int i = 5; i != argc; ++i)
+    for (int i = 6; i != argc; ++i)
     {
         seed.push_back(std::stoul(argv[i]));
     }
@@ -53,7 +54,10 @@ int main(int argc, char** argv)
 
     time = endTime - startTime;
 
-    reachedNodes.outputNodesToTerminal();
+    if (output == "terminal")
+        reachedNodes.outputNodesToTerminal();
+    else
+        reachedNodes.outputNodesToFile(output);
 
     std::cout << "reached end of program" << std::endl;
 

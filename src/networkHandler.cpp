@@ -64,6 +64,35 @@ void NetworkHandler::createHashTable(const std::string& utilityFile)
                                     stoul(currentLine.substr(14, 2)), stoul(currentLine.substr(17, 2)));
         }
 
+        // DiffusionTime date[3] = {
+        //     {
+        //         stoul(line.substr(60, 4)),
+        //         stoul(line.substr(65, 2)),
+        //         stoul(line.substr(68, 2)),
+        //         stoul(line.substr(71, 2)),
+        //         stoul(line.substr(74, 2)),
+        //         stoul(line.substr(77, 2))
+        //     },
+        //     {
+        //         stoul(line.substr(110, 4)),
+        //         stoul(line.substr(115, 2)),
+        //         stoul(line.substr(118, 2)),
+        //         stoul(line.substr(121, 2)),
+        //         stoul(line.substr(124, 2)),
+        //         stoul(line.substr(127, 2))
+        //     },
+        //     {
+        //         stoul(line.substr(60, 4)),
+        //         stoul(line.substr(65, 2)),
+        //         stoul(line.substr(68, 2)),
+        //         stoul(line.substr(71, 2)),
+        //         stoul(line.substr(74, 2)),
+        //         stoul(line.substr(77, 2))
+        //     } 
+        // };
+
+        // // std::cout << node1 << ' ' << node2 << ' ' << line.substr(60, 4) << ' ' << line.substr(65, 2) << ' ' << line.substr(68, 2) << ' ' << line.substr(71, 2) << ' ' << line.substr(74, 2) << ' ' << line.substr(77, 2) << std::endl;
+
         createNodeList(node1, new node::Node(node1, node2, date, nullptr));
         createNodeList(node2, new node::Node(node2, node1, date, nullptr));
     }

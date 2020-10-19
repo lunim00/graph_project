@@ -1,7 +1,7 @@
 #ifndef INFORMEDNODES_HPP
 #define INFORMEDNODES_HPP
 #include <cstdlib>
-#include <iostream>
+#include <string>
 #include "diffusionTime.hpp"
 
 class InformedNodes
@@ -34,6 +34,7 @@ public:
     void addNode(const unsigned int& ID, const DiffusionTime& dt);
     InformedNodes::Node* getNode(const unsigned int& ID);
     void outputNodesToTerminal() const;
+    void outputNodesToFile(const std::string& filePath) const;
 };
 
 #endif

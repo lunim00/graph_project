@@ -19,14 +19,14 @@ int main(int argc, char** argv)
 
     auto totalStartTime = std::chrono::steady_clock::now();
     auto startTime = std::chrono::steady_clock::now();
+    
     std::string file = argv[1];
-    // std::cout << "file: " << file << std::endl;
     unsigned int size = std::stoul(std::string(argv[2]));
-    // std::cout << "size: " << size << std::endl;
     std::string dtCase = argv[3];
     float beta = stof(std::string(argv[4]));
     std::string output = argv[5];
-    std::cout << dtCase << std::endl;
+    std::string testCases = argv[6];
+
     NetworkHandler handler = NetworkHandler(file, size);
     auto endTime = std::chrono::steady_clock::now();
 
@@ -37,34 +37,78 @@ int main(int argc, char** argv)
     std::cout << "took: " << time.count() << " seconds." << std::endl;
 
     std::vector<unsigned int> seed;
-    for (int i = 6; i != argc; ++i)
+    for (int i = 7; i != argc; ++i)
     {
         seed.push_back(std::stoul(argv[i]));
     }
-    // std::vector<unsigned int> seed = {1000205}; //1000205
-    startTime = std::chrono::steady_clock::now();
+    
+    if (testCases == "single") //maybe change this "command"??
+    {
+        startTime = std::chrono::steady_clock::now();
 
-    InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, size, beta, dtCase);
+        InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, size, beta, dtCase);
 
-    endTime = std::chrono::steady_clock::now();
-    time = endTime - startTime;
+        endTime = std::chrono::steady_clock::now();
+        time = endTime - startTime;
 
-    std::cout << "Ran ICM algorithm" << std::endl;
-    std::cout << "took: " << time.count() << " seconds." << std::endl;
+        std::cout << "Ran ICM algorithm" << std::endl;
+        std::cout << "took: " << time.count() << " seconds." << std::endl;
 
-    time = endTime - startTime;
+        time = endTime - startTime;
 
-    if (output == "terminal")
-        reachedNodes.outputNodesToTerminal();
+        if (output == "terminal")
+            reachedNodes.outputNodesToTerminal();
+        else
+            reachedNodes.outputNodesToFile(output);
+
+        std::cout << "reached end of program" << std::endl;
+
+        endTime = std::chrono::steady_clock::now();
+        time = endTime - totalStartTime;
+
+        std::cout << "took in total: " << time.count() << " sec" << std::endl;
+    }
     else
-        reachedNodes.outputNodesToFile(output);
+    {
+        std::ifstream input;
+        input.open(testCases);
+        std::string line = "";
+        std::string currentLine = "";
 
-    std::cout << "reached end of program" << std::endl;
+        while (std::getline(input, line))
+        {
+            //parameters: timecase, output, beta, single or multiple start nodes.
+            currentLine = line;
+            std::vector<std::string> parameters;
 
-    endTime = std::chrono::steady_clock::now();
-    time = endTime - totalStartTime;
+            while (currentLine.find(" ") <= currentLine.length())
+            {
+                unsigned int endIndex = currentLine.find(" ");
+                parameters.push_back(currentLine.substr(0, endIndex));
+                unsigned int newStart = endIndex + 1;
+                currentLine = currentLine.substr(newStart, currentLine.length() - newStart);
+            }
+            
+            std::vector<unsigned int> seed;
+            dtCase = parameters[0];
+            output = parameters[1];
+            beta = stoul(parameters[2]);
 
-    std::cout << "took in total: " << time.count() << " sec" << std::endl;
+            for (unsigned int i = 3; i != parameters.size(); ++i)
+            {
+                seed.push_back(std::stoul(parameters[i]));
+            }
+
+            InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, size, beta, dtCase);
+
+            if (output == "terminal")
+                reachedNodes.outputNodesToTerminal();
+            else
+                reachedNodes.outputNodesToFile(output);
+        }
+
+        input.close();
+    }
 
     return 0;
 }

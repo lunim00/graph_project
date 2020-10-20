@@ -53,4 +53,6 @@ An example when standing in the bin folder: **./Project.exe ../utility/data.txt 
   - **output**: the txt file that the output should be written to, but it can also be enterd as "terminal", which results in a output in the terminal.
   - **startNodes**: the IDs that represent the nodes that should already be affected when running the test. Any amount of nodes can be entered, but they have to be space separated, an example: **nodeID1 nodeID2 nodeID3**
 
+
+
 An **example** of how to run **multiple cases** (standing in bin folder): **Project.exe ../utility/data.txt 5 ../utility/dataTestCases.txt**

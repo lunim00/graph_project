@@ -28,12 +28,29 @@ To compile the project you need the [prerequisites](#prerequisites) that were me
 - (to clear the build and executable files run **mingw32-make clean**)
 
 ## How to use it
-To run the project with the executable that is created by running **mingw32-make implementation** run: **./bin/Project.exe file nodeAmount startNodes**
-- file: Is the relative path from root to the txt file that contain the edges
-- nodeAmount: Is the amount of nodes that exist in the test file
-- startNodes: These are the nodes that will be active when the test starts, and these are space separated
+The project can be run in two ways. Either by only making one test on a network or by making multiple tests on a network.
+To run only one test on the network using the project use the following command:
+**projectExecutable networkFile nodeAmount timeCase beta output startNodes**
 
-As an example: **./bin/Project.exe ./utility/data.txt 5 792 386**
+- **projectExecutable**: is the executable that is built by running: **mingw32-make implementation**
+- **networkFile**: the relative path to a txt file that represents the network
+- **nodeAmount**: is the amount of nodes that exist in the network that was given in the last parameter
+- **timeCase**: represent three different cases of diffusion time that is able to be represented, **best_case**, **average_case** and **worst_case**
+- **beta**: a decimal number between 0.0 and 1.0 to determine the probability that a node is affected by a adjacent node.
+- **output**: the txt file that the output should be written to, but it can also be enterd as "terminal", which results in a output in the terminal.
+- **startNodes**: the IDs that represent the nodes that should already be affected when running the test. Any amount of nodes can be entered, but they have to be space separated, an example: **nodeID1 nodeID2 nodeID3**
 
-### Replace content of main.cpp
-The content of main.cpp can also be modified to support different types of tests 
+An example when standing in the bin folder: **./Project.exe ../utility/data.txt 5 best_case 1.0 terminal 792 386**
+
+**To run multiple cases** enter the following into the command line: **projectExecutable networkFile nodeAmount testCases**
+
+- **projectExecutable**: is the executable that is built by running: **mingw32-make implementation**
+- **networkFile**: the relative path to a txt file that represents the network
+- **nodeAmount**: is the amount of nodes that exist in the network that was given in the last parameter
+- **testCases**: is the relative path to a txt file that contains test cases on each row, these test cases are structured in this way: **timeCase output beta startNodes**
+  - **timeCase**: represent three different cases of diffusion time that is able to be represented, **best_case**, **average_case** and **worst_case**
+  - **beta**: a decimal number between 0.0 and 1.0 to determine the probability that a node is affected by a adjacent node.
+  - **output**: the txt file that the output should be written to, but it can also be enterd as "terminal", which results in a output in the terminal.
+  - **startNodes**: the IDs that represent the nodes that should already be affected when running the test. Any amount of nodes can be entered, but they have to be space separated, an example: **nodeID1 nodeID2 nodeID3**
+
+An **example** of how to run **multiple cases** (standing in bin folder): **Project.exe ../utility/data.txt 5 ../utility/dataTestCases.txt**

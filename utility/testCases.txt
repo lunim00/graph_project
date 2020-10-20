@@ -1,0 +1,3 @@
+best_case testar1.txt 1.0 1000205
+best_case testar2.txt 1.0 1594446
+best_case testar3.txt 1.0 1594446 1000205 1090891

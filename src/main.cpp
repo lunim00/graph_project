@@ -1,114 +1,95 @@
 #include <iostream>
 #include <string>
-#include <array>
+#include <string_view>
+#include <cstdlib>
+#include <fstream>
 #include <vector>
-#include <chrono>
 #include "networkHandler.hpp"
-#include "independentCascadeModel.hpp"
 #include "informedNodes.hpp"
-#include "node.hpp"
+#include "independentCascadeModel.hpp"
 
 int main(int argc, char** argv)
 {
-
-    if (argc < 7)
+    if (argc < 4)
     {
         std::cerr << "To few arguments" << std::endl;
         return 1;
     }
-
-    auto totalStartTime = std::chrono::steady_clock::now();
-    auto startTime = std::chrono::steady_clock::now();
-    
-    std::string file = argv[1];
-    unsigned int size = std::stoul(std::string(argv[2]));
-    std::string dtCase = argv[3];
-    float beta = stof(std::string(argv[4]));
-    std::string output = argv[5];
-    std::string testCases = argv[6];
-
-    NetworkHandler handler = NetworkHandler(file, size);
-    auto endTime = std::chrono::steady_clock::now();
-
-    std::cout << "Input read" << std::endl;
-
-    std::chrono::duration<double> time = endTime - startTime;
-
-    std::cout << "took: " << time.count() << " seconds." << std::endl;
-
-    std::vector<unsigned int> seed;
-    for (int i = 7; i != argc; ++i)
+    else if (4 < argc && argc < 7)
     {
-        seed.push_back(std::stoul(argv[i]));
+        std::cerr << "To many arguments to run multiple cases " <<
+                     "and to few arguments to run one case." << std::endl;
+        return 1;
     }
-    
-    if (testCases == "single") //maybe change this "command"??
+
+    if (argc == 4)
     {
-        startTime = std::chrono::steady_clock::now();
+        std::string graphRepresentationFile = argv[1];
+        unsigned int nodeAmount = std::stoul(argv[2]);
+        std::fstream testCasesFile;
+        
+        //write tests on files
+        std::string line;
+        std::string_view currentLine;
 
-        InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, size, beta, dtCase);
+        testCasesFile.open(std::string_view(argv[3]).data());
 
-        endTime = std::chrono::steady_clock::now();
-        time = endTime - startTime;
+        while (std::getline(testCasesFile, line))
+        {
+            std::vector<std::string_view> parameters;
+            currentLine = line;
 
-        std::cout << "Ran ICM algorithm" << std::endl;
-        std::cout << "took: " << time.count() << " seconds." << std::endl;
+            while (currentLine.find(' ') < currentLine.length())
+            {
+                unsigned int end = currentLine.find(' ');
+                parameters.push_back(currentLine.substr(0, end));
+                currentLine = currentLine.substr(end + 1, currentLine.length() - (end + 1));
+            }
+            parameters.push_back(currentLine);
+        
+            std::vector<unsigned int> seed;
 
-        time = endTime - startTime;
+            for (unsigned int i = 3; i != parameters.size(); ++i)
+            {
+                seed.push_back(std::stoul(parameters[i].data()));
+            }
 
+            float beta = std::stof(parameters[2].data());
+            std::string_view timeCase = parameters[0];
+
+            NetworkHandler handler = NetworkHandler(graphRepresentationFile, nodeAmount);
+            InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, nodeAmount, beta, timeCase);
+            
+            if (parameters[1] == "terminal")
+                reachedNodes.outputNodesToTerminal();
+            else
+                reachedNodes.outputNodesToFile(std::string(parameters[1]));
+
+        }
+        testCasesFile.close();
+    }
+    else
+    {
+        std::string graphRepresentationFile = argv[1];
+        unsigned int nodeAmount = std::stoul(argv[2]);
+        std::string timeCase = argv[3];
+        float beta = std::stof(argv[4]);
+        std::string output = argv[5];
+        std::vector<unsigned int> seed;
+
+        for (int i = 6; i != argc; ++i)
+        {
+            seed.push_back(std::stoul(argv[i]));
+        }
+
+        NetworkHandler handler = NetworkHandler(graphRepresentationFile, nodeAmount);
+
+        InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, nodeAmount, beta, timeCase);
+        
         if (output == "terminal")
             reachedNodes.outputNodesToTerminal();
         else
             reachedNodes.outputNodesToFile(output);
-
-        std::cout << "reached end of program" << std::endl;
-
-        endTime = std::chrono::steady_clock::now();
-        time = endTime - totalStartTime;
-
-        std::cout << "took in total: " << time.count() << " sec" << std::endl;
-    }
-    else
-    {
-        std::ifstream input;
-        input.open(testCases);
-        std::string line = "";
-        std::string currentLine = "";
-
-        while (std::getline(input, line))
-        {
-            //parameters: timecase, output, beta, single or multiple start nodes.
-            currentLine = line;
-            std::vector<std::string> parameters;
-
-            while (currentLine.find(" ") <= currentLine.length())
-            {
-                unsigned int endIndex = currentLine.find(" ");
-                parameters.push_back(currentLine.substr(0, endIndex));
-                unsigned int newStart = endIndex + 1;
-                currentLine = currentLine.substr(newStart, currentLine.length() - newStart);
-            }
-            
-            std::vector<unsigned int> seed;
-            dtCase = parameters[0];
-            output = parameters[1];
-            beta = stoul(parameters[2]);
-
-            for (unsigned int i = 3; i != parameters.size(); ++i)
-            {
-                seed.push_back(std::stoul(parameters[i]));
-            }
-
-            InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, size, beta, dtCase);
-
-            if (output == "terminal")
-                reachedNodes.outputNodesToTerminal();
-            else
-                reachedNodes.outputNodesToFile(output);
-        }
-
-        input.close();
     }
 
-    return 0;
 }

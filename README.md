@@ -8,6 +8,7 @@
   - [How to use it](#how-to-use-it)
 
 ## About the project
+This project was developed in the course PA1414 given at Blekinge Institute of Technology. The objective of the project was to be able to determine the nodes that could be reached in a temporal network using the independent cascade model.
 
 ## Prerequisites
 To be able to compile this project the following prerequisites are needed:
@@ -56,3 +57,8 @@ An example when standing in the bin folder: **./Project.exe ../utility/data.txt 
 
 
 An **example** of how to run **multiple cases** (standing in bin folder): **Project.exe ../utility/data.txt 5 ../utility/dataTestCases.txt**
+
+<br>
+<br>
+
+### Project created by **Ludvig Halling** ###

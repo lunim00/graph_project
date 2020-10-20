@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <vector>
+#include <stdexcept>
 #include "networkHandler.hpp"
 #include "informedNodes.hpp"
 #include "independentCascadeModel.hpp"
@@ -77,6 +78,16 @@ int main(int argc, char** argv)
         std::string output = argv[5];
         std::vector<unsigned int> seed;
 
+        if (graphRepresentationFile.length() < graphRepresentationFile.find(".txt"))
+            throw std::logic_error("Input error | wrong file type in path to network.");
+        if (timeCase != "best_case" && timeCase != "average_case" && timeCase != "worst_case")
+            throw std::logic_error("Input error | wrong time case type.");
+        if (beta < 0.0f || 1.0f < beta)
+            throw std::logic_error("Input error | beta is out of span.");
+        if (output.length() < output.find(".txt") && output != "terminal")
+            throw std::logic_error("Input error | wrong file type in path to output.");
+        
+
         for (int i = 6; i != argc; ++i)
         {
             seed.push_back(std::stoul(argv[i]));
@@ -91,5 +102,4 @@ int main(int argc, char** argv)
         else
             reachedNodes.outputNodesToFile(output);
     }
-
 }

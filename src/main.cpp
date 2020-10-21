@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <vector>
+#include <chrono>
 #include <stdexcept>
 #include "networkHandler.hpp"
 #include "informedNodes.hpp"
@@ -93,7 +94,10 @@ int main(int argc, char** argv)
             seed.push_back(std::stoul(argv[i]));
         }
 
+        auto startTime = std::chrono::steady_clock::now();
         NetworkHandler handler = NetworkHandler(graphRepresentationFile, nodeAmount);
+        auto endTime = std::chrono::steady_clock::now();
+
 
         InformedNodes reachedNodes = icm::diffuseInformation(handler, seed, nodeAmount, beta, timeCase);
         
@@ -101,5 +105,8 @@ int main(int argc, char** argv)
             reachedNodes.outputNodesToTerminal();
         else
             reachedNodes.outputNodesToFile(output);
+
+        std::chrono::duration<double> time = endTime - startTime;
+        std::cout << "input took: " << time.count() << " seconds." << std::endl;
     }
 }

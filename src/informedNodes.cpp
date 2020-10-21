@@ -71,8 +71,6 @@ void InformedNodes::outputNodesToFile(const std::string& filePath) const
     InformedNodes::Node* startNode = this->nodes;
     while (currentNode != startNode + this->size)
     {
-        // std::cout << "(node Id: " << currentNode->index << ", time: " << currentNode->dt.toString() << ')' << std::endl;
-        // InformedNodes::Node* nextNode = currentNode->nextNode;
         InformedNodes::Node* nextNode = currentNode;
         while (nextNode != nullptr)
         {

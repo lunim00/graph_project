@@ -82,8 +82,13 @@ bool DiffusionTime::operator<=(const DiffusionTime& other) const
 
 std::string DiffusionTime::toString() const
 {
-    std::string returningStr = std::to_string(this->year) + "-" + std::to_string(this->month) + 
-                               "-" + std::to_string(this->day) + " " + std::to_string(this->hour) + 
-                               ":" + std::to_string(this->minute) + ":" + std::to_string(this->second);
+    std::string month = (this->month < 10) ? '0' + std::to_string(this->month) : std::to_string(this->month);
+    std::string day = (this->day < 10) ? '0' + std::to_string(this->day) : std::to_string(this->day);
+    std::string hour = (this->hour < 10) ? '0' + std::to_string(this->hour) : std::to_string(this->hour);
+    std::string minute = (this->minute < 10) ? '0' + std::to_string(this->minute) : std::to_string(this->minute);
+    std::string second = (this->second < 10) ? '0' + std::to_string(this->second) : std::to_string(this->second);
+    std::string returningStr = std::to_string(this->year) + "-" + month + 
+                               "-" + day + " " + hour + 
+                               ":" + minute + ":" + second;
     return returningStr;
 }

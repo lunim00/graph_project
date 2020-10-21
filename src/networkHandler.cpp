@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <stdexcept>
 #include "networkHandler.hpp"
 #include "hashing.hpp"
 
@@ -23,10 +24,14 @@ std::vector<node::Node*> NetworkHandler::getAdjacentNodes(const std::vector<unsi
     for (const unsigned int& informed_node : nodes)
     {
         NodeList* currentNodeList = network + hashing::hashingFunction(informed_node, this->networkSize);
-        while (currentNodeList->getNode()->getNodeID() != informed_node)
+        while (currentNodeList != nullptr && currentNodeList->getNode()->getNodeID() != informed_node)
         {
             currentNodeList = currentNodeList->getNextNodeList();
         }
+
+        if (currentNodeList == nullptr)
+            throw std::logic_error("Logic error | Inputed start nodes don't exist in network.");
+
         node::Node* currentNode = currentNodeList->getNode();
         while (currentNode != nullptr)
         {

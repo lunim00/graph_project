@@ -17,8 +17,10 @@ endif
 CPP := g++ 
 CPPFLAGS := -g -std=c++17 -Wall -Wextra -Wpedantic -Werror
 
-implementation: $(EXECUTABLE)
-#skriv körningen för implementationen med dina egna tester i :D
+all: test
+
+test: $(EXECUTABLE)
+
 $(EXECUTABLE): $(BUILD)diffusionTime.o $(BUILD)hashing.o $(BUILD)independentCascadeModel.o  $(BUILD)informedNodes.o $(BUILD)main.o $(BUILD)networkHandler.o $(BUILD)node.o $(BUILD)nodeList.o $(BUILD)utility.o
 	$(CPP) $(CPPFLAGS) $(BUILD)diffusionTime.o $(BUILD)hashing.o $(BUILD)independentCascadeModel.o  $(BUILD)informedNodes.o $(BUILD)main.o $(BUILD)networkHandler.o $(BUILD)node.o $(BUILD)nodeList.o $(BUILD)utility.o -o $(EXECUTABLE)
 
@@ -59,3 +61,4 @@ clean:
 	-$(DELETE) $(BUILD)networkHandler.o
 	-$(DELETE) $(BUILD)node.o
 	-$(DELETE) $(BUILD)nodeList.o
+	-$(DELETE) $(BUILD)utility.o

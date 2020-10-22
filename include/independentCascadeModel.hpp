@@ -11,12 +11,10 @@
 namespace icm
 {
     InformedNodes diffuseInformation(NetworkHandler& networkHandler, const std::vector<unsigned int>& seed, 
-                                                            const std::size_t& size, const float& beta = 1.0, 
-                                                            const std::string& diffusionTimeCase = "best_case");
+                                     const std::size_t& size, const std::string& diffusionTimeCase = "best_case");
 
     InformedNodes diffuseInformation(NetworkHandler& networkHandler, const std::vector<unsigned int>& seed, 
-                                                            const std::size_t& size, const float& beta = 1.0, 
-                                                            std::string_view diffusionTimeCase = "best_case");
+                                     const std::size_t& size, std::string_view diffusionTimeCase = "best_case");
 
 }
 

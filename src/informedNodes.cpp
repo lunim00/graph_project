@@ -46,6 +46,8 @@ void InformedNodes::outputNodesToTerminal() const
 {
     InformedNodes::Node* currentNode = this->nodes;
     InformedNodes::Node* startNode = this->nodes;
+    unsigned int nodeAmount = 0;
+
     while (currentNode != startNode + this->size)
     {
         // std::cout << "(node Id: " << currentNode->index << ", time: " << currentNode->dt.toString() << ')' << std::endl;
@@ -54,11 +56,15 @@ void InformedNodes::outputNodesToTerminal() const
         while (nextNode != nullptr)
         {
             if (nextNode->index != 0)
-                std::cout << "(node ID: " << nextNode->index << ", time: " << nextNode->dt.toString() << ')' << std::endl;
+            {
+                std::cout << "{nodeID: " << std::to_string(nextNode->index) << ", time: " << nextNode->dt.toString() << "}\n";
+                ++nodeAmount;
+            }
             nextNode = nextNode->nextNode;
         }
         ++currentNode;
     }
+    std::cout << nodeAmount << " nodes were reached." << std::endl;
 }
 
 void InformedNodes::outputNodesToFile(const std::string& filePath) const
@@ -69,17 +75,25 @@ void InformedNodes::outputNodesToFile(const std::string& filePath) const
 
     InformedNodes::Node* currentNode = this->nodes;
     InformedNodes::Node* startNode = this->nodes;
+    unsigned int nodeAmount = 0;
+
     while (currentNode != startNode + this->size)
     {
         InformedNodes::Node* nextNode = currentNode;
         while (nextNode != nullptr)
         {
             if (nextNode->index != 0)
-                outputStr += "(node ID: " + std::to_string(nextNode->index) + ", time: " + nextNode->dt.toString() + ")\n";
+            {
+                outputStr += "{nodeID: " + std::to_string(nextNode->index) + ", time: " + nextNode->dt.toString() + "}\n";
+                ++nodeAmount;
+            }
             nextNode = nextNode->nextNode;
         }
         ++currentNode;
     }
+
+    std::cout << nodeAmount << " nodes were reached and results were outputed to " << filePath << std::endl;
+
     output.open(filePath);
     output << outputStr;
     output.close();

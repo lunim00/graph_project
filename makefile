@@ -17,10 +17,12 @@ endif
 CPP := g++ 
 CPPFLAGS := -g -std=c++17 -Wall -Wextra -Wpedantic -Werror
 
-implementation: $(EXECUTABLE)
-#skriv körningen för implementationen med dina egna tester i :D
-$(EXECUTABLE): $(BUILD)diffusionTime.o $(BUILD)hashing.o $(BUILD)independentCascadeModel.o  $(BUILD)informedNodes.o $(BUILD)main.o $(BUILD)networkHandler.o $(BUILD)node.o $(BUILD)nodeList.o
-	$(CPP) $(CPPFLAGS) $(BUILD)diffusionTime.o $(BUILD)hashing.o $(BUILD)independentCascadeModel.o  $(BUILD)informedNodes.o $(BUILD)main.o $(BUILD)networkHandler.o $(BUILD)node.o $(BUILD)nodeList.o -o $(EXECUTABLE)
+all: test
+
+test: $(EXECUTABLE)
+
+$(EXECUTABLE): $(BUILD)diffusionTime.o $(BUILD)hashing.o $(BUILD)independentCascadeModel.o  $(BUILD)informedNodes.o $(BUILD)main.o $(BUILD)networkHandler.o $(BUILD)node.o $(BUILD)nodeList.o $(BUILD)utility.o
+	$(CPP) $(CPPFLAGS) $(BUILD)diffusionTime.o $(BUILD)hashing.o $(BUILD)independentCascadeModel.o  $(BUILD)informedNodes.o $(BUILD)main.o $(BUILD)networkHandler.o $(BUILD)node.o $(BUILD)nodeList.o $(BUILD)utility.o -o $(EXECUTABLE)
 
 $(BUILD)diffusionTime.o: $(SOURCE)diffusionTime.cpp $(INCLUDES)diffusionTime.hpp
 	$(CPP) $(CPPFLAGS) -c $(SOURCE)diffusionTime.cpp -I$(INCLUDES) -o $(BUILD)diffusionTime.o
@@ -37,14 +39,17 @@ $(BUILD)informedNodes.o: $(SOURCE)informedNodes.cpp $(SOURCE)diffusionTime.cpp $
 $(BUILD)main.o: $(SOURCE)main.cpp $(INCLUDES)networkHandler.hpp $(INCLUDES)independentCascadeModel.hpp $(INCLUDES)informedNodes.hpp $(INCLUDES)node.hpp
 	$(CPP) $(CPPFLAGS) -c $(SOURCE)main.cpp -I$(INCLUDES) -o $(BUILD)main.o
 
-$(BUILD)networkHandler.o: $(SOURCE)networkHandler.cpp $(INCLUDES)networkHandler.hpp $(INCLUDES)node.hpp $(INCLUDES)nodeList.hpp $(INCLUDES)diffusionTime.hpp $(INCLUDES)hashing.hpp
+$(BUILD)networkHandler.o: $(SOURCE)networkHandler.cpp $(INCLUDES)networkHandler.hpp $(INCLUDES)node.hpp $(INCLUDES)nodeList.hpp $(INCLUDES)diffusionTime.hpp $(INCLUDES)hashing.hpp $(INCLUDES)utility.hpp
 	$(CPP) $(CPPFLAGS) -c $(SOURCE)networkHandler.cpp -I$(INCLUDES) -o $(BUILD)networkHandler.o
 
 $(BUILD)node.o: $(SOURCE)node.cpp $(INCLUDES)node.hpp $(INCLUDES)diffusionTime.hpp
 	$(CPP) $(CPPFLAGS) -c $(SOURCE)node.cpp -I$(INCLUDES) -o $(BUILD)node.o
 
-$(BUILD)nodeList.o: $(SOURCE)nodeList.cpp
+$(BUILD)nodeList.o: $(SOURCE)nodeList.cpp $(INCLUDES)nodeList.hpp
 	$(CPP) $(CPPFLAGS) -c $(SOURCE)nodeList.cpp -I$(INCLUDES) -o $(BUILD)nodeList.o
+
+$(BUILD)utility.o: $(SOURCE)utility.cpp $(INCLUDES)utility.hpp
+	$(CPP) $(CPPFLAGS) -c $(SOURCE)utility.cpp -I$(INCLUDES) -o $(BUILD)utility.o
 
 clean:
 	-$(DELETE) $(EXECUTABLE)  
@@ -56,3 +61,4 @@ clean:
 	-$(DELETE) $(BUILD)networkHandler.o
 	-$(DELETE) $(BUILD)node.o
 	-$(DELETE) $(BUILD)nodeList.o
+	-$(DELETE) $(BUILD)utility.o

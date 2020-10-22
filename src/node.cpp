@@ -24,7 +24,7 @@ node::Node::~Node()
     m_pNextNode = nullptr;
 }
 
-const DiffusionTime& node::Node::getTimeInterval(const std::string& timeCase) const
+const DiffusionTime& node::Node::getTimeInterval(std::string_view timeCase) const
 {
     try
     {

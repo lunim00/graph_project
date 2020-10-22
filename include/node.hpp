@@ -1,6 +1,7 @@
 #ifndef NODE_HPP
 #define NODE_HPP
 #include <string>
+#include <string_view>
 #include <iostream>
 #include <stdexcept>
 #include "diffusionTime.hpp"
@@ -20,7 +21,7 @@ namespace node
         Node(const node::Node& other);
         ~Node();
 
-        const DiffusionTime& getTimeInterval(const std::string& timeCase) const;
+        const DiffusionTime& getTimeInterval(std::string_view timeCase) const;
         const unsigned int& getNodeID() const;
         const unsigned int& getNeighborID() const;
         void setNextNode(node::Node* nextNode);

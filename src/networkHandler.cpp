@@ -1,7 +1,11 @@
 #include <iostream>
 #include <string>
+#include <string_view>
+#include <charconv>
+#include <stdexcept>
 #include "networkHandler.hpp"
 #include "hashing.hpp"
+#include "utility.hpp"
 
 NetworkHandler::NetworkHandler(const std::string& utilityFile, const std::size_t size):
 network(new NodeList[size]), networkSize(size)
@@ -23,10 +27,14 @@ std::vector<node::Node*> NetworkHandler::getAdjacentNodes(const std::vector<unsi
     for (const unsigned int& informed_node : nodes)
     {
         NodeList* currentNodeList = network + hashing::hashingFunction(informed_node, this->networkSize);
-        while (currentNodeList->getNode()->getNodeID() != informed_node)
+        while (currentNodeList != nullptr && currentNodeList->getNode()->getNodeID() != informed_node)
         {
             currentNodeList = currentNodeList->getNextNodeList();
         }
+
+        if (currentNodeList == nullptr)
+            throw std::logic_error("Logic error | Inputed start nodes don't exist in network.");
+
         node::Node* currentNode = currentNodeList->getNode();
         while (currentNode != nullptr)
         {
@@ -43,7 +51,7 @@ void NetworkHandler::createHashTable(const std::string& utilityFile)
     input.open(utilityFile, std::ifstream::in);
     // std::cout << "file opened" << std::endl;
     std::string line;
-    std::string currentLine;
+    std::string_view currentLine;
 
     const unsigned int stringOffset = 11;
 
@@ -51,17 +59,29 @@ void NetworkHandler::createHashTable(const std::string& utilityFile)
    {
         currentLine = line;
 
-        int node1 = stoul(currentLine.substr(0, currentLine.find(" ")));
+        unsigned int node1;
+        utility::stringViewToUnsignedInt(currentLine.data(), currentLine.data() + currentLine.find(' '), node1);
         currentLine = currentLine.substr(currentLine.find(" ") + 1, currentLine.length());
-        int node2 = stoul(currentLine.substr(0, currentLine.find(" ")));
+        unsigned int node2;
+        utility::stringViewToUnsignedInt(currentLine.data(), currentLine.data() + currentLine.find(' '), node2);
         DiffusionTime date[3];
+
+        std::string toFind = "Timestamp('"; 
 
         for (unsigned int i = 0; i != 3; ++i)
         {
-            currentLine = currentLine.substr(currentLine.find("Timestamp('") + stringOffset, currentLine.length());
-            date[i] = DiffusionTime(stoul(currentLine.substr(0, 4)), stoul(currentLine.substr(5, 2)),
-                                    stoul(currentLine.substr(8, 2)), stoul(currentLine.substr(11, 2)), 
-                                    stoul(currentLine.substr(14, 2)), stoul(currentLine.substr(17, 2)));
+            currentLine = currentLine.substr(currentLine.find(toFind) + stringOffset, currentLine.length());
+            unsigned int year, month, day, hour, minute, second;
+            utility::stringViewToUnsignedInt(currentLine.data(), currentLine.data() + 4, year);
+            utility::stringViewToUnsignedInt(currentLine.data() + 5, currentLine.data() + 7, month);
+            utility::stringViewToUnsignedInt(currentLine.data() + 8, currentLine.data() + 10, day);
+            utility::stringViewToUnsignedInt(currentLine.data() + 11, currentLine.data() + 13, hour);
+            utility::stringViewToUnsignedInt(currentLine.data() + 14, currentLine.data() + 16, minute);
+            utility::stringViewToUnsignedInt(currentLine.data() + 17, currentLine.data() + 19, second);
+            
+            date[i] = DiffusionTime(year, month,
+                                    day, hour, 
+                                    minute, second);
         }
 
         // DiffusionTime date[3] = {
